@@ -1,13 +1,9 @@
 # biblecli
 
-Bible verse lookup from your terminal. Supports Korean and English, multiple translations, and local translation files.
+Bible verse lookup from your terminal. Multiple translations, Korean input support, and local translation files.
 
 ```
-$ biblecli 요3:16 -t nkrv,kjv
-
-[nkrv] 요 3:16
-하나님이 세상을 이처럼 사랑하사 독생자를 주셨으니 이는 그를 믿는 자마다
-멸망하지 않고 영생을 얻게 하려 하심이라
+$ biblecli jn3:16
 
 [kjv] John 3:16
 For God so loved the world, that he gave his only begotten Son, that whosoever
@@ -33,28 +29,32 @@ cp biblecli ~/.local/bin/  # or anywhere in your PATH
 
 ```bash
 # Single verse (default translation: kjv)
-biblecli 요3:16
 biblecli jn3:16
 biblecli john3:16
 
 # Verse range
-biblecli 고전13:4-7
 biblecli 1co13:4-7
 
 # Whole chapter
-biblecli 시23
 biblecli ps23
 
-# Multiple translations
-biblecli 요3:16 -t nkrv,kjv
-biblecli 롬8:28 -t korean,kjv
+# Multiple translations at once
+biblecli jn3:16 -t kjv,asv
 
 # Set default translations
-biblecli -d nkrv,kjv
+biblecli -d kjv,web
 
 # Then just:
-biblecli 요3:16
-# outputs both nkrv and kjv
+biblecli rom8:28
+# outputs both kjv and web
+```
+
+Korean book abbreviations also work:
+
+```bash
+biblecli 요3:16           # John 3:16
+biblecli 고전13:4-7       # 1 Corinthians 13:4-7
+biblecli 시23             # Psalm 23
 ```
 
 ## Translations
@@ -66,11 +66,11 @@ Fetched live from [api.getbible.net](https://api.getbible.net). No API key neede
 | ID | Translation |
 |---|---|
 | `kjv` | King James Version |
-| `korean` | 개역한글 (1952/1961) |
-| `koreankjv` | 한글 킹제임스 |
 | `asv` | American Standard Version |
 | `web` | World English Bible |
 | `ylt` | Young's Literal Translation |
+| `korean` | Korean Revised Version (1952/1961) |
+| `koreankjv` | Korean King James Version |
 
 [Full list of available translations](https://api.getbible.net/v2/translations.json)
 
@@ -79,17 +79,17 @@ Fetched live from [api.getbible.net](https://api.getbible.net). No API key neede
 Place JSON files in `~/.bible/` for translations not available via API (e.g., copyrighted ones).
 
 ```
-~/.bible/nkrv.json    # 개역개정
-~/.bible/custom.json  # any custom translation
+~/.bible/nkrv.json    # any local translation
+~/.bible/custom.json
 ```
 
-**File format** — flat key-value with Korean book abbreviations:
+**File format** — flat key-value with Korean book abbreviations as keys:
 
 ```json
 {
-  "창1:1": "태초에 하나님이 천지를 창조하시니라",
-  "창1:2": "땅이 혼돈하고 공허하며...",
-  "요3:16": "하나님이 세상을 이처럼 사랑하사..."
+  "gen1:1": "In the beginning...",
+  "gen1:2": "And the earth was...",
+  "jn3:16": "For God so loved..."
 }
 ```
 
@@ -97,19 +97,18 @@ The CLI tries the GetBible API first. If the translation isn't found there, it f
 
 ## Book names
 
-Both Korean and English abbreviations are supported:
+Both English and Korean abbreviations are supported:
 
-| Korean | English | Book |
+| English | Korean | Book |
 |---|---|---|
-| 창 | gen | Genesis |
-| 출 | exo | Exodus |
-| 시 | ps | Psalms |
-| 사 | isa | Isaiah |
-| 마 | matt, mt | Matthew |
-| 요 | john, jn | John |
-| 롬 | rom | Romans |
-| 고전 | 1co | 1 Corinthians |
-| 계 | rev | Revelation |
+| gen | 창 | Genesis |
+| ps | 시 | Psalms |
+| isa | 사 | Isaiah |
+| matt, mt | 마 | Matthew |
+| john, jn | 요 | John |
+| rom | 롬 | Romans |
+| 1co | 고전 | 1 Corinthians |
+| rev | 계 | Revelation |
 | ... | ... | all 66 books supported |
 
 ## Config
@@ -118,11 +117,11 @@ Stored at `~/.bible/config.json`:
 
 ```json
 {
-  "default": ["nkrv", "kjv"]
+  "default": ["kjv"]
 }
 ```
 
-Set via CLI: `biblecli -d nkrv,kjv`
+Set via CLI: `biblecli -d kjv,web`
 
 If no config exists, defaults to `kjv`.
 
