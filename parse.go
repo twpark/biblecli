@@ -22,6 +22,7 @@ var (
 
 func parseReference(input string) (*Reference, error) {
 	input = strings.TrimSpace(input)
+	input = strings.ReplaceAll(input, " ", "")
 
 	var bookName, rest string
 

@@ -77,7 +77,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	var refStr string
+	var refParts []string
 	var transFlag string
 	var defaultFlag string
 
@@ -97,9 +97,11 @@ func main() {
 			printUsage()
 			return
 		default:
-			refStr = args[i]
+			refParts = append(refParts, args[i])
 		}
 	}
+
+	refStr := strings.Join(refParts, "")
 
 	// Set default translations
 	if defaultFlag != "" {
